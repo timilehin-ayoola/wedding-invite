@@ -1,0 +1,25 @@
+{
+  "name": "project-wedding-invite",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "description": "A wedding invitation website for family and friends, with an optional link to give a gift.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "verify": "node tools/verify.mjs",
+    "share-card": "node tools/make-share-card.mjs"
+  },
+  "dependencies": {
+    "astro": "7.4.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "typescript": "^6.0.3"
+  }
+}

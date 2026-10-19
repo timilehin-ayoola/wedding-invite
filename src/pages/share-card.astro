@@ -1,0 +1,100 @@
+---
+/* 1200x630 social share card. Not a guest page — it exists so the link
+   preview in WhatsApp/Instagram/iMessage shows something beautiful.
+   Rendered to /share-card.png by tools/make-share-card.mjs. */
+import { wedding } from "../data/wedding";
+
+const { couple, date, venue, hero } = wedding;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{`Share card — ${couple.partnerOne} & ${couple.partnerTwo}`}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;1,400&display=swap"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; }
+      html, body { width: 1200px; height: 630px; }
+      body {
+        font-family: "Lora", Georgia, serif;
+        background: #1e3a31;
+        color: #f7f3ea;
+        display: grid;
+        place-items: center;
+        padding: 56px;
+      }
+      .card {
+        width: 100%;
+        height: 100%;
+        border: 1px solid rgba(217, 205, 182, 0.55);
+        outline: 1px solid rgba(217, 205, 182, 0.35);
+        outline-offset: 9px;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        text-align: center;
+        gap: 18px;
+        padding: 48px;
+        position: relative;
+      }
+      .monogram {
+        width: 66px;
+        height: 66px;
+        border: 1px solid #b08d57;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-family: "Playfair Display", serif;
+        font-size: 19px;
+        letter-spacing: 0.08em;
+        color: #d9c7a3;
+      }
+      .kicker {
+        font-size: 15px;
+        letter-spacing: 0.42em;
+        text-transform: uppercase;
+        color: #b08d57;
+      }
+      .names {
+        font-family: "Playfair Display", serif;
+        font-size: 96px;
+        line-height: 1.02;
+        font-weight: 400;
+        color: #fdfaf3;
+      }
+      .names .amp { font-style: italic; color: #b08d57; font-size: 0.62em; padding: 0 0.1em; }
+      .rule { display: flex; align-items: center; gap: 14px; width: 340px; }
+      .rule span { height: 1px; flex: 1; background: rgba(217, 205, 182, 0.6); }
+      .rule i { width: 8px; height: 8px; background: #b08d57; transform: rotate(45deg); }
+      .date { font-family: "Playfair Display", serif; font-size: 30px; letter-spacing: 0.04em; }
+      .venue {
+        font-size: 16px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #b9ae95;
+      }
+      .tagline { font-style: italic; font-size: 21px; color: #d9cdb6; margin-top: 4px; }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <p class="monogram">{couple.monogram}</p>
+      <p class="kicker">{hero.kicker}</p>
+      <h1 class="names">
+        <span>{couple.partnerOne}</span><span class="amp">&amp;</span><span>{couple.partnerTwo}</span>
+      </h1>
+      <div class="rule" aria-hidden="true"><span></span><i></i><span></span></div>
+      <p class="date"><time datetime={date.iso}>{date.long}</time></p>
+      <p class="venue">{venue.name} · {venue.addressLines.slice(-1)[0]}</p>
+      <p class="tagline">{hero.tagline}</p>
+    </div>
+  </body>
+</html>

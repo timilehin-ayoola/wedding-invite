@@ -1,0 +1,110 @@
+---
+// Progressive enhancement only. Everything on the page works without this
+// script: the countdown falls back to build-time values, sections stay visible,
+// and "add to calendar" and the share links are real anchors.
+---
+
+<script>
+  const root = document.documentElement;
+  root.classList.add("js");
+
+  /* -------------------------------------------------------------- reveal --- */
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
+
+  const revealAll = () => revealTargets.forEach((el) => el.classList.add("is-in"));
+
+  if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+    revealAll();
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+    );
+    revealTargets.forEach((el) => observer.observe(el));
+    // Safety net: never leave content hidden if something goes wrong.
+    window.setTimeout(revealAll, 4000);
+  }
+
+  /* ----------------------------------------------------------- countdown --- */
+  document.querySelectorAll<HTMLElement>("[data-countdown]").forEach((el) => {
+    const target = new Date(el.dataset.date || "");
+    if (Number.isNaN(target.getTime())) return; // keep the static fallback
+
+    const grid = el.querySelector(".countdown__grid");
+    const label = el.querySelector("[data-countdown-label]");
+    const status = el.querySelector("[data-countdown-status]");
+    const tick = reduceMotion.matches ? 60000 : 1000;
+
+    const setUnit = (unit: string, value: number) => {
+      const node = el.querySelector('[data-unit="' + unit + '"]');
+      if (node) node.textContent = String(value).padStart(2, "0");
+    };
+
+    let lastAnnouncedMinute = -1;
+    let timer = 0;
+
+    const render = () => {
+      const remaining = target.getTime() - Date.now();
+
+      if (remaining <= 0) {
+        el.classList.add("is-past");
+        setUnit("days", 0);
+        setUnit("hours", 0);
+        setUnit("minutes", 0);
+        setUnit("seconds", 0);
+        if (label && el.dataset.pastLabel) label.textContent = el.dataset.pastLabel;
+        if (status) status.textContent = (el.dataset.dateDisplay || "") + " has passed.";
+        window.clearInterval(timer);
+        return;
+      }
+
+      const total = Math.floor(remaining / 1000);
+      const days = Math.floor(total / 86400);
+      setUnit("days", days);
+      setUnit("hours", Math.floor((total % 86400) / 3600));
+      setUnit("minutes", Math.floor((total % 3600) / 60));
+      setUnit("seconds", total % 60);
+
+      // Announce at most once a minute so screen readers are not flooded.
+      const minutes = Math.floor(total / 60);
+      if (status && minutes !== lastAnnouncedMinute) {
+        lastAnnouncedMinute = minutes;
+        status.textContent =
+          (el.dataset.dateDisplay || "") + " is in " + days + " day" + (days === 1 ? "" : "s") + ".";
+      }
+    };
+
+    render();
+    if (grid) timer = window.setInterval(render, tick);
+  });
+
+  /* --------------------------------------------------------------- share --- */
+  document.querySelectorAll<HTMLButtonElement>("[data-share]").forEach((button) => {
+    const original = button.textContent || "Share";
+    button.addEventListener("click", async () => {
+      const url = button.dataset.shareUrl || window.location.href;
+      const text = button.dataset.shareText || document.title;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: document.title, text: text, url: url });
+          return;
+        }
+        await navigator.clipboard.writeText(url);
+        button.textContent = "Link copied";
+        window.setTimeout(() => {
+          button.textContent = original;
+        }, 2500);
+      } catch {
+        // Share sheet dismissed or clipboard blocked — the WhatsApp link next
+        // to this button still works.
+      }
+    });
+  });
+</script>

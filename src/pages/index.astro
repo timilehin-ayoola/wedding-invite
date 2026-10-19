@@ -1,0 +1,667 @@
+---
+/* The invitation. Classic Elegant: ivory paper, deep green, thin gold rules,
+   serif display type.
+
+   All guest-facing copy lives in src/data/wedding.ts — edit that file, not
+   this one. Two other directions are kept in src/design-alternates/ for
+   reference; they are not built or published. */
+import Head from "../components/Head.astro";
+import Countdown from "../components/Countdown.astro";
+import Behaviours from "../components/Behaviours.astro";
+import { base, withBase } from "../utils/base";
+import { wedding } from "../data/wedding";
+import "../styles/base.css";
+
+const { couple, date, venue, hero, story, schedule, gallery, gift, faq, replies, footer, meta } =
+  wedding;
+
+const shareUrl = new URL(
+  base === "" || Astro.url.pathname.startsWith(`${base}/`) ? Astro.url.pathname : `${base}${Astro.url.pathname}`,
+  Astro.site ?? Astro.url.origin,
+).href;
+const whatsappShare = `https://wa.me/?text=${encodeURIComponent(`${footer.shareText} — ${shareUrl}`)}`;
+const isExternal = /^https?:\/\//.test(gift.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head
+      title={meta.title}
+      description={meta.description}
+      noindex={meta.noindex}
+      themeColor="#FBF8F3"
+      fonts="family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400"
+    />
+  </head>
+
+  <body class="classic">
+    <a class="skip-link" href="#main">Skip to the invitation</a>
+
+    <main id="main">
+      <!-- ------------------------------------------------------------ hero -->
+      <header class="hero" data-reveal>
+        <div class="hero__frame">
+          <p class="monogram" aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}>
+            {couple.monogram}
+          </p>
+          <p class="eyebrow">{hero.kicker}</p>
+          <h1 class="names">
+            <span>{couple.partnerOne}</span>
+            <span class="names__amp" aria-hidden="true">&amp;</span>
+            <span>{couple.partnerTwo}</span>
+          </h1>
+          <div class="rule" aria-hidden="true">
+            <span class="rule__line"></span>
+            <span class="rule__dot"></span>
+            <span class="rule__line"></span>
+          </div>
+          <p class="hero__date">
+            <time datetime={date.iso}>{date.long}</time>
+          </p>
+          <p class="hero__venue">{venue.name} · {venue.addressLines.slice(-2).join(", ")}</p>
+          <p class="hero__tagline">{hero.tagline}</p>
+
+          <Countdown class="countdown--classic" />
+
+          <div class="hero__actions">
+            <a class="btn btn--solid" href={withBase("/wedding.ics")} download>Add to calendar</a>
+            <a class="btn btn--ghost" href={whatsappShare} target="_blank" rel="noopener noreferrer">
+              Share this invite
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- ----------------------------------------------------------- story -->
+      <section class="section" aria-labelledby="story-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Chapter one</p>
+        <h2 class="section__title" id="story-heading">{story.heading}</h2>
+        <p class="lede">{story.intro}</p>
+        {story.paragraphs.map((paragraph) => <p class="body-text">{paragraph}</p>)}
+
+        <ol class="milestones">
+          {story.milestones.map((milestone) => (
+            <li class="milestone">
+              <span class="milestone__year">{milestone.year}</span>
+              <div>
+                <h3 class="milestone__title">{milestone.title}</h3>
+                <p class="milestone__text">{milestone.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- --------------------------------------------------------- the day -->
+      <section class="section" aria-labelledby="day-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Order of the day</p>
+        <h2 class="section__title" id="day-heading">The celebration</h2>
+        <p class="lede">
+          {date.long}, from {date.ceremonyTime}. Ceremony at {date.ceremonyTime}, dinner at{" "}
+          {date.receptionTime}. All times are {date.timezoneLabel}.
+        </p>
+        <ol class="schedule">
+          {schedule.map((item) => (
+            <li class="schedule__item">
+              <span class="schedule__time">{item.time}</span>
+              <div>
+                <h3 class="schedule__title">{item.title}</h3>
+                <p class="schedule__detail">{item.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- ----------------------------------------------------------- venue -->
+      <section class="section" aria-labelledby="venue-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Where to find us</p>
+        <h2 class="section__title" id="venue-heading">The venue</h2>
+        <div class="venue panel">
+          <h3 class="venue__name">{venue.name}</h3>
+          <address class="venue__address">
+            {venue.addressLines.map((line) => <span>{line}</span>)}
+          </address>
+          <p class="body-text">{venue.directions}</p>
+          <a class="btn btn--solid" href={venue.mapUrl} target="_blank" rel="noopener noreferrer">
+            {venue.mapLabel}
+          </a>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- gallery -->
+      <section class="section" aria-labelledby="gallery-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Moments</p>
+        <h2 class="section__title" id="gallery-heading">{gallery.heading}</h2>
+        <p class="lede">{gallery.intro}</p>
+        <ul class="gallery">
+          {gallery.photos.map((photo) => (
+            <li class:list={["gallery__item", `gallery__item--${photo.shape ?? "wide"}`]}>
+              <figure>
+                <img src={withBase(photo.src)} alt={photo.alt} loading="lazy" decoding="async" />
+                {photo.caption && <figcaption>{photo.caption}</figcaption>}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ------------------------------------------------------------ gift -->
+      <section class="section section--gift" aria-labelledby="gift-heading" data-reveal>
+        <div class="gift panel panel--double">
+          <p class="eyebrow">A gentle note</p>
+          <h2 class="section__title" id="gift-heading">{gift.heading}</h2>
+          <p class="lede">{gift.message}</p>
+          <p class="gift__note">{gift.note}</p>
+          <a
+            class="btn btn--gold"
+            href={gift.url}
+            data-gift-link
+            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
+            {gift.ctaLabel}
+            {isExternal && <span class="sr-only"> ({gift.urlLabel})</span>}
+          </a>
+          <ul class="gift__alternatives">
+            {gift.alternatives.map((option) => (
+              <li>
+                <strong>{option.label}</strong>
+                <span>{option.detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------- faq -->
+      <section class="section" aria-labelledby="faq-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Before you come</p>
+        <h2 class="section__title" id="faq-heading">{faq.heading}</h2>
+        <div class="faq">
+          {faq.items.map((item) => (
+            <details class="faq__item">
+              <summary>
+                <span>{item.q}</span>
+                <span class="faq__marker" aria-hidden="true"></span>
+              </summary>
+              <p class="body-text">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- replies -->
+      <section class="section" aria-labelledby="replies-heading" data-reveal>
+        <p class="eyebrow eyebrow--muted">Kindly reply</p>
+        <h2 class="section__title" id="replies-heading">{replies.heading}</h2>
+        <p class="lede">{replies.text}</p>
+        <ul class="replies">
+          {replies.contacts.map((contact) => (
+            <li class="replies__item">
+              <span class="replies__name">{contact.name}</span>
+              <span class="replies__channel">{contact.channel}</span>
+              <span class="replies__value">{contact.value}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer" data-reveal>
+      <p class="footer__closing">{footer.closing}</p>
+      <p class="footer__signature">{footer.signature}</p>
+      <p class="footer__hashtag">{couple.hashtag}</p>
+      <div class="footer__actions">
+        <a class="btn btn--ghost" href={whatsappShare} target="_blank" rel="noopener noreferrer">
+          Share on WhatsApp
+        </a>
+        <button class="btn btn--ghost" type="button" data-share data-share-text={footer.shareText}>
+          Copy invite link
+        </button>
+      </div>
+      <p class="footer__small">
+        This invitation is for family and friends. Gift giving is entirely optional.
+      </p>
+    </footer>
+
+    <Behaviours />
+  </body>
+</html>
+
+<style is:global>
+  .classic {
+    --ivory: #fbf8f3;
+    --paper: #fffdf9;
+    --ink: #23292b;
+    --green: #1e3a31;
+    --gold: #b08d57;
+    --gold-text: #7d6234;
+    --rule: #d9cdb6;
+    --muted: #6f6a61;
+
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: "Lora", Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    background-image: radial-gradient(circle at 12% 8%, rgba(176, 141, 87, 0.07), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(30, 58, 49, 0.06), transparent 46%);
+  }
+
+  .classic h1, .classic h2, .classic h3 {
+    font-family: "Playfair Display", "Times New Roman", serif;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+
+  .classic .eyebrow {
+    font-family: "Lora", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.34em;
+    font-size: 0.68rem;
+    color: var(--gold-text);
+    margin-bottom: 1.1rem;
+  }
+  .classic .eyebrow--muted { color: var(--muted); }
+
+  .classic :focus-visible { outline-color: var(--green); }
+
+  /* ---------------------------------------------------------------- hero -- */
+  .classic .hero {
+    padding: clamp(1.25rem, 4vw, 3rem);
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+  }
+
+  .classic .hero__frame {
+    width: min(100%, 46rem);
+    text-align: center;
+    padding: clamp(2.25rem, 7vw, 5rem) clamp(1.25rem, 5vw, 4rem);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    outline: 1px solid var(--rule);
+    outline-offset: 5px;
+    box-shadow: 0 30px 60px -40px rgba(35, 41, 43, 0.35);
+  }
+
+  .classic .monogram {
+    width: 4.5rem;
+    height: 4.5rem;
+    margin: 0 auto 1.75rem;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: "Playfair Display", serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    color: var(--green);
+  }
+
+  .classic .names {
+    font-size: clamp(2.6rem, 9vw, 4.75rem);
+    display: grid;
+    justify-items: center;
+    gap: 0.1em;
+    color: var(--green);
+  }
+  .classic .names__amp {
+    font-style: italic;
+    font-size: 0.55em;
+    color: var(--gold-text);
+  }
+
+  .classic .rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.9rem auto;
+    width: min(100%, 20rem);
+  }
+  .classic .rule__line { height: 1px; flex: 1; background: var(--rule); }
+  .classic .rule__dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .classic .hero__date {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.15rem, 3.4vw, 1.6rem);
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+  .classic .hero__venue {
+    margin-top: 0.45rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .classic .hero__tagline {
+    margin-top: 1.6rem;
+    font-style: italic;
+    font-size: 1.08rem;
+    color: #3d4547;
+  }
+
+  .classic .hero__actions {
+    margin-top: 2.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: center;
+  }
+
+  /* ----------------------------------------------------------- countdown -- */
+  .classic .countdown { margin-top: 2.4rem; }
+  .classic .countdown__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    max-width: 22rem;
+    margin: 0 auto;
+  }
+  .classic .countdown__unit {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.85rem 0.25rem;
+  }
+  .classic .countdown__value {
+    display: block;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.5rem, 5vw, 2.1rem);
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+  }
+  .classic .countdown__name {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.63rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .classic .countdown__label {
+    margin-top: 1.1rem;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  /* -------------------------------------------------------------- layout -- */
+  .classic .section {
+    width: min(100% - 2.5rem, 40rem);
+    margin: clamp(4rem, 12vw, 8rem) auto;
+    text-align: left;
+  }
+  .classic .section__title {
+    font-size: clamp(1.9rem, 5.5vw, 2.6rem);
+    color: var(--green);
+    margin-bottom: 1.25rem;
+  }
+  .classic .lede {
+    font-size: 1.1rem;
+    color: #3d4547;
+    margin-bottom: 1.35rem;
+  }
+  .classic .body-text {
+    margin-bottom: 1.1rem;
+    color: #3a4143;
+  }
+  .classic .body-text:last-child { margin-bottom: 0; }
+
+  .classic .panel {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .classic .panel--double { outline: 1px solid var(--rule); outline-offset: 4px; }
+
+  /* --------------------------------------------------------------- story -- */
+  .classic .milestones {
+    margin-top: 2.25rem;
+    border-left: 1px solid var(--rule);
+    padding-left: 1.75rem;
+    display: grid;
+    gap: 1.75rem;
+  }
+  .classic .milestone { position: relative; }
+  .classic .milestone::before {
+    content: "";
+    position: absolute;
+    left: -1.95rem;
+    top: 0.55rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+  .classic .milestone__year {
+    font-family: "Playfair Display", serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-text);
+  }
+  .classic .milestone__title {
+    font-size: 1.25rem;
+    margin: 0.15rem 0 0.3rem;
+    color: var(--green);
+  }
+  .classic .milestone__text { color: var(--muted); font-size: 0.98rem; }
+
+  /* ------------------------------------------------------------ schedule -- */
+  .classic .schedule { display: grid; gap: 0; margin-top: 2rem; }
+  .classic .schedule__item {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1.25rem;
+    padding: 1.35rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .classic .schedule__item:last-child { border-bottom: 1px solid var(--rule); }
+  .classic .schedule__time {
+    font-family: "Playfair Display", serif;
+    font-size: 1.05rem;
+    color: var(--gold-text);
+    letter-spacing: 0.04em;
+  }
+  .classic .schedule__title { font-size: 1.2rem; color: var(--green); }
+  .classic .schedule__detail { font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* --------------------------------------------------------------- venue -- */
+  .classic .venue { text-align: center; display: grid; gap: 1rem; justify-items: center; }
+  .classic .venue__name { font-size: clamp(1.5rem, 4.5vw, 2rem); color: var(--green); }
+  .classic .venue__address {
+    font-style: normal;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: grid;
+    gap: 0.2rem;
+  }
+  .classic .venue .body-text { max-width: 34rem; }
+
+  /* ------------------------------------------------------------- gallery -- */
+  .classic .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .classic .gallery__item figure {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 0.5rem;
+  }
+  .classic .gallery__item img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    filter: saturate(0.92);
+  }
+  .classic .gallery__item--tall img { aspect-ratio: 3 / 4; }
+  .classic .gallery__item figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* ---------------------------------------------------------------- gift -- */
+  .classic .section--gift { text-align: center; }
+  .classic .gift { display: grid; gap: 1.15rem; justify-items: center; }
+  .classic .gift .eyebrow { color: var(--gold-text); }
+  .classic .gift .lede { max-width: 34rem; }
+  .classic .gift__note {
+    font-style: italic;
+    color: var(--muted);
+    max-width: 32rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.1rem;
+  }
+  .classic .gift__alternatives {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .classic .gift__alternatives strong {
+    color: var(--green);
+    font-weight: 500;
+    margin-right: 0.4rem;
+  }
+
+  /* ----------------------------------------------------------------- faq -- */
+  .classic .faq { margin-top: 2rem; border-top: 1px solid var(--rule); }
+  .classic .faq__item { border-bottom: 1px solid var(--rule); }
+  .classic .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    font-family: "Playfair Display", serif;
+    font-size: 1.15rem;
+    color: var(--green);
+    list-style: none;
+  }
+  .classic .faq__item summary:hover { color: var(--gold-text); }
+  .classic .faq__marker {
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    position: relative;
+  }
+  .classic .faq__marker::before,
+  .classic .faq__marker::after {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 1px;
+    background: var(--gold);
+  }
+  .classic .faq__marker::after { transform: rotate(90deg); transition: transform 0.25s ease; }
+  .classic .faq__item[open] .faq__marker::after { transform: rotate(0deg); }
+  .classic .faq__item .body-text { padding-bottom: 1.35rem; }
+
+  /* ------------------------------------------------------------- replies -- */
+  .classic .replies { display: grid; gap: 0.85rem; margin-top: 1.75rem; }
+  .classic .replies__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+  }
+  .classic .replies__name { font-family: "Playfair Display", serif; color: var(--green); }
+  .classic .replies__channel {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    align-self: center;
+  }
+  .classic .replies__value {
+    grid-column: 1 / -1;
+    font-size: 1.05rem;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+
+  /* -------------------------------------------------------------- footer -- */
+  .classic .footer {
+    text-align: center;
+    padding: clamp(3.5rem, 10vw, 6rem) 1.5rem clamp(2.5rem, 6vw, 4rem);
+    background: var(--green);
+    color: #f3efe6;
+  }
+  .classic .footer__closing {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.4rem, 4.2vw, 2rem);
+  }
+  .classic .footer__signature {
+    margin-top: 0.9rem;
+    font-style: italic;
+    color: #d9cdb6;
+  }
+  .classic .footer__hashtag {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #b9ae95;
+  }
+  .classic .footer__actions {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .classic .footer__small {
+    margin-top: 2rem;
+    font-size: 0.78rem;
+    color: #b9ae95;
+  }
+
+  /* ------------------------------------------------------------- buttons -- */
+  .classic .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.85rem 1.75rem;
+    font-family: "Lora", serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+  .classic .btn--solid { background: var(--green); color: #f7f3ea; }
+  .classic .btn--solid:hover { background: #162c25; border-color: #162c25; }
+  .classic .btn--ghost:hover { background: rgba(30, 58, 49, 0.08); }
+  .classic .btn--gold { border-color: var(--gold-text); background: var(--gold-text); color: #fffdf7; }
+  .classic .btn--gold:hover { background: #6b5330; border-color: #6b5330; }
+  .classic .footer .btn--ghost { border-color: #d9cdb6; color: #f3efe6; }
+  .classic .footer .btn--ghost:hover { background: rgba(217, 205, 182, 0.14); }
+  .classic .footer .btn:focus-visible { outline-color: #f3efe6; }
+</style>

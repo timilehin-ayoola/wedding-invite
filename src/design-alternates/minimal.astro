@@ -1,0 +1,597 @@
+---
+/* Direction B — Modern Minimal.
+   White space, hairline rules, tabular numerals, one warm accent. */
+import Head from "../components/Head.astro";
+import Countdown from "../components/Countdown.astro";
+import Behaviours from "../components/Behaviours.astro";
+import { wedding } from "../data/wedding";
+import "../styles/base.css";
+
+const { couple, date, venue, hero, story, schedule, gallery, gift, faq, replies, footer, meta } =
+  wedding;
+
+const shareUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const whatsappShare = `https://wa.me/?text=${encodeURIComponent(`${footer.shareText} — ${shareUrl}`)}`;
+const isExternal = /^https?:\/\//.test(gift.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head
+      title={meta.title}
+      description={meta.description}
+      noindex={meta.noindex}
+      themeColor="#ffffff"
+      fonts="family=Inter:wght@300;400;500;600;700"
+    />
+  </head>
+
+  <body class="minimal">
+    <a class="skip-link" href="#main">Skip to the invitation</a>
+
+    <nav class="topbar" aria-label="Invitation">
+      <span class="topbar__mark">{couple.monogram}</span>
+      <ul class="topbar__links">
+        <li><a href="#story-heading">Story</a></li>
+        <li><a href="#day-heading">Day</a></li>
+        <li><a href="#venue-heading">Venue</a></li>
+        <li><a href="#gift-heading">Gift</a></li>
+        <li><a href="#faq-heading">Info</a></li>
+      </ul>
+      <a class="topbar__cta" href="/wedding.ics" download>Add to calendar</a>
+    </nav>
+
+    <main id="main">
+      <!-- ------------------------------------------------------------ hero -->
+      <header class="hero" data-reveal>
+        <p class="label">{hero.kicker}</p>
+        <h1 class="hero__names">
+          <span>{couple.partnerOne}</span>
+          <span class="hero__amp" aria-hidden="true">&amp;</span>
+          <span>{couple.partnerTwo}</span>
+        </h1>
+        <p class="hero__invitation">{hero.invitation}</p>
+        <p class="hero__tagline">{hero.tagline}</p>
+
+        <div class="hero__meta">
+          <div class="hero__metaitem">
+            <span class="label">Date</span>
+            <span class="hero__metavalue"><time datetime={date.iso}>{date.short}</time></span>
+          </div>
+          <div class="hero__metaitem">
+            <span class="label">Ceremony</span>
+            <span class="hero__metavalue">{date.ceremonyTime}</span>
+          </div>
+          <div class="hero__metaitem">
+            <span class="label">Where</span>
+            <span class="hero__metavalue">{venue.name}</span>
+          </div>
+          <div class="hero__metaitem">
+            <span class="label">City</span>
+            <span class="hero__metavalue">{venue.addressLines.slice(-1)[0]}</span>
+          </div>
+        </div>
+
+        <Countdown class="countdown--minimal" />
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/wedding.ics" download>Add to calendar</a>
+          <a class="btn btn--text" href={whatsappShare} target="_blank" rel="noopener noreferrer">
+            Share on WhatsApp
+          </a>
+        </div>
+      </header>
+
+      <!-- ----------------------------------------------------------- story -->
+      <section class="section" aria-labelledby="story-heading" data-reveal>
+        <p class="section__index">01</p>
+        <div class="section__body">
+          <h2 class="section__title" id="story-heading">{story.heading}</h2>
+          <p class="lede">{story.intro}</p>
+          {story.paragraphs.map((paragraph) => <p class="body-text">{paragraph}</p>)}
+          <ol class="milestones">
+            {story.milestones.map((milestone, index) => (
+              <li class="milestone">
+                <span class="milestone__no">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <p class="milestone__year">{milestone.year}</p>
+                  <h3 class="milestone__title">{milestone.title}</h3>
+                  <p class="milestone__text">{milestone.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- the day -->
+      <section class="section" aria-labelledby="day-heading" data-reveal>
+        <p class="section__index">02</p>
+        <div class="section__body">
+          <h2 class="section__title" id="day-heading">The celebration</h2>
+          <p class="lede">
+            {date.long} · {date.timezoneLabel}
+          </p>
+          <ol class="schedule">
+            {schedule.map((item) => (
+              <li class="schedule__row">
+                <span class="schedule__time">{item.time}</span>
+                <span class="schedule__title">{item.title}</span>
+                <span class="schedule__detail">{item.detail}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------- venue -->
+      <section class="section" aria-labelledby="venue-heading" data-reveal>
+        <p class="section__index">03</p>
+        <div class="section__body">
+          <h2 class="section__title" id="venue-heading">The venue</h2>
+          <div class="venue">
+            <p class="venue__name">{venue.name}</p>
+            <address class="venue__address">
+              {venue.addressLines.map((line) => <span>{line}</span>)}
+            </address>
+            <p class="body-text">{venue.directions}</p>
+            <a class="btn btn--text" href={venue.mapUrl} target="_blank" rel="noopener noreferrer">
+              {venue.mapLabel} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- gallery -->
+      <section class="section" aria-labelledby="gallery-heading" data-reveal>
+        <p class="section__index">04</p>
+        <div class="section__body">
+          <h2 class="section__title" id="gallery-heading">{gallery.heading}</h2>
+          <p class="lede">{gallery.intro}</p>
+          <ul class="gallery">
+            {gallery.photos.map((photo) => (
+              <li class:list={["gallery__item", `gallery__item--${photo.shape ?? "wide"}`]}>
+                <figure>
+                  <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+                  {photo.caption && <figcaption>{photo.caption}</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------ gift -->
+      <section class="section section--gift" aria-labelledby="gift-heading" data-reveal>
+        <p class="section__index">05</p>
+        <div class="section__body">
+          <div class="gift">
+            <h2 class="gift__title" id="gift-heading">{gift.heading}</h2>
+            <p class="lede">{gift.message}</p>
+            <p class="gift__note">{gift.note}</p>
+            <a
+              class="btn btn--primary btn--block"
+              href={gift.url}
+              data-gift-link
+              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
+              {gift.ctaLabel}
+              {isExternal && <span class="sr-only"> ({gift.urlLabel})</span>}
+            </a>
+            <ul class="gift__alternatives">
+              {gift.alternatives.map((option) => (
+                <li>
+                  <strong>{option.label}</strong>
+                  <span>{option.detail}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------- faq -->
+      <section class="section" aria-labelledby="faq-heading" data-reveal>
+        <p class="section__index">06</p>
+        <div class="section__body">
+          <h2 class="section__title" id="faq-heading">{faq.heading}</h2>
+          <div class="faq">
+            {faq.items.map((item) => (
+              <details class="faq__item">
+                <summary>
+                  <span>{item.q}</span>
+                  <span class="faq__marker" aria-hidden="true"></span>
+                </summary>
+                <p class="body-text">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- replies -->
+      <section class="section" aria-labelledby="replies-heading" data-reveal>
+        <p class="section__index">07</p>
+        <div class="section__body">
+          <h2 class="section__title" id="replies-heading">{replies.heading}</h2>
+          <p class="lede">{replies.text}</p>
+          <ul class="replies">
+            {replies.contacts.map((contact) => (
+              <li class="replies__item">
+                <span class="replies__name">{contact.name}</span>
+                <span class="replies__channel">{contact.channel}</span>
+                <span class="replies__value">{contact.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" data-reveal>
+      <p class="footer__closing">{footer.closing}</p>
+      <p class="footer__signature">{footer.signature}</p>
+      <div class="footer__actions">
+        <a class="btn btn--primary" href={whatsappShare} target="_blank" rel="noopener noreferrer">
+          Share on WhatsApp
+        </a>
+        <button class="btn btn--text" type="button" data-share data-share-text={footer.shareText}>
+          Copy invite link
+        </button>
+      </div>
+      <p class="footer__hashtag">{couple.hashtag}</p>
+      <p class="footer__small">
+        For family and friends. Gift giving is entirely optional.
+      </p>
+    </footer>
+
+    <Behaviours />
+  </body>
+</html>
+
+<style is:global>
+  .minimal {
+    --ink: #0e0e0e;
+    --paper: #ffffff;
+    --line: #e6e3de;
+    --muted: #6b6b6b;
+    --accent: #c0441f;
+
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  .minimal h1, .minimal h2, .minimal h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  .minimal :focus-visible { outline-color: var(--accent); }
+
+  .minimal .label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ------------------------------------------------------------- topbar -- */
+  .minimal .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem clamp(1rem, 4vw, 3rem);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .minimal .topbar__mark { font-weight: 700; letter-spacing: 0.02em; }
+  .minimal .topbar__links {
+    display: none;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .minimal .topbar__links a { text-decoration: none; display: block; padding: 0.45rem 0.15rem; }
+  .minimal .topbar__links a:hover { color: var(--ink); }
+  .minimal .topbar__cta {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 0.15rem;
+  }
+  @media (min-width: 60rem) { .minimal .topbar__links { display: flex; } }
+
+  /* ---------------------------------------------------------------- hero -- */
+  .minimal .hero {
+    padding: clamp(3rem, 10vw, 7rem) clamp(1.25rem, 4vw, 3rem) clamp(3rem, 8vw, 6rem);
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+  .minimal .hero__names {
+    margin-top: 1.5rem;
+    font-size: clamp(3.2rem, 13vw, 8.5rem);
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.28em;
+  }
+  .minimal .hero__amp { color: var(--accent); font-weight: 400; }
+  .minimal .hero__invitation {
+    margin-top: 1.75rem;
+    font-size: 1.05rem;
+    color: var(--muted);
+  }
+  .minimal .hero__tagline {
+    margin-top: 0.5rem;
+    font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+    max-width: 42rem;
+    color: var(--ink);
+    font-weight: 300;
+  }
+
+  .minimal .hero__meta {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .minimal .hero__metaitem {
+    padding: 1.25rem 1.25rem 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+  .minimal .hero__metavalue { font-size: 1.05rem; font-weight: 500; }
+
+  .minimal .hero__actions {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  /* ----------------------------------------------------------- countdown -- */
+  .minimal .countdown { margin-top: 3rem; }
+  .minimal .countdown__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.75rem, 3vw, 2rem);
+    max-width: 34rem;
+  }
+  .minimal .countdown__unit { border-top: 1px solid var(--ink); padding-top: 0.75rem; }
+  .minimal .countdown__value {
+    display: block;
+    font-size: clamp(2rem, 7vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .minimal .countdown__name {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .minimal .countdown__label {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* ------------------------------------------------------------- sections -- */
+  .minimal .section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 9vw, 6.5rem) clamp(1.25rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  @media (min-width: 60rem) {
+    .minimal .section { grid-template-columns: 8rem 1fr; gap: 3rem; }
+  }
+  .minimal .section__index {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  @media (min-width: 60rem) { .minimal .section__index { position: sticky; top: 5.5rem; } }
+  .minimal .section__body { max-width: 52rem; }
+  .minimal .section__title { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+  .minimal .lede {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #333333;
+    max-width: 46rem;
+  }
+  .minimal .body-text { margin-top: 1rem; color: var(--muted); max-width: 44rem; }
+
+  /* ------------------------------------------------------------- milestones */
+  .minimal .milestones {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .minimal .milestone {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .minimal .milestone__no { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .minimal .milestone__year { font-size: 0.8rem; color: var(--accent); font-weight: 600; letter-spacing: 0.08em; }
+  .minimal .milestone__title { font-size: 1.25rem; margin-top: 0.15rem; }
+  .minimal .milestone__text { color: var(--muted); font-size: 0.95rem; margin-top: 0.25rem; }
+
+  /* ------------------------------------------------------------- schedule -- */
+  .minimal .schedule { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+  .minimal .schedule__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 40rem) {
+    .minimal .schedule__row { grid-template-columns: 6.5rem 1fr 1.2fr; gap: 1.5rem; align-items: baseline; }
+  }
+  .minimal .schedule__time { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .minimal .schedule__title { font-weight: 500; }
+  .minimal .schedule__detail { color: var(--muted); font-size: 0.95rem; }
+
+  /* --------------------------------------------------------------- venue -- */
+  .minimal .venue { margin-top: 2rem; display: grid; gap: 0.75rem; justify-items: start; }
+  .minimal .venue__name { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 600; }
+  .minimal .venue__address { font-style: normal; color: var(--muted); display: grid; gap: 0.15rem; }
+
+  /* ------------------------------------------------------------- gallery -- */
+  .minimal .gallery {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  @media (min-width: 52rem) { .minimal .gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; } }
+  .minimal .gallery__item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .minimal .gallery__item--tall { grid-row: span 1; }
+  .minimal .gallery__item--tall img { aspect-ratio: 3 / 4; }
+  .minimal .gallery__item figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------------------------------------------------------------- gift -- */
+  .minimal .section--gift .section__body { max-width: 100%; }
+  .minimal .gift {
+    margin-top: 0;
+    border: 1px solid var(--ink);
+    padding: clamp(1.5rem, 5vw, 3.5rem);
+    display: grid;
+    gap: 1rem;
+  }
+  .minimal .gift__title { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+  .minimal .gift__note {
+    font-size: 0.95rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  .minimal .gift__alternatives {
+    margin-top: 0.5rem;
+    display: grid;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .minimal .gift__alternatives strong { color: var(--ink); font-weight: 600; margin-right: 0.4rem; }
+  .minimal .btn--block { justify-content: center; }
+
+  /* ------------------------------------------------------------------ faq -- */
+  .minimal .faq { margin-top: 2rem; border-top: 1px solid var(--line); }
+  .minimal .faq__item { border-bottom: 1px solid var(--line); }
+  .minimal .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    font-size: 1.05rem;
+    font-weight: 500;
+    list-style: none;
+  }
+  .minimal .faq__marker {
+    flex: none;
+    width: 0.8rem;
+    height: 0.8rem;
+    position: relative;
+  }
+  .minimal .faq__marker::before,
+  .minimal .faq__marker::after {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.25s ease;
+  }
+  .minimal .faq__marker::after { transform: rotate(90deg); }
+  .minimal .faq__item[open] .faq__marker::after { transform: rotate(0deg); }
+  .minimal .faq__item .body-text { padding-bottom: 1.4rem; }
+
+  /* -------------------------------------------------------------- replies -- */
+  .minimal .replies { margin-top: 2rem; display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .minimal .replies__item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .minimal .replies__name { font-weight: 600; }
+  .minimal .replies__channel { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .minimal .replies__value { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+  /* --------------------------------------------------------------- footer -- */
+  .minimal .footer {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 9vw, 6rem) clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--line);
+  }
+  .minimal .footer__closing { font-size: clamp(2rem, 7vw, 4rem); font-weight: 600; letter-spacing: -0.03em; }
+  .minimal .footer__signature { margin-top: 1rem; color: var(--muted); }
+  .minimal .footer__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .minimal .footer__hashtag { margin-top: 2.5rem; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .minimal .footer__small { margin-top: 1rem; font-size: 0.78rem; color: var(--muted); }
+
+  /* -------------------------------------------------------------- buttons -- */
+  .minimal .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.85rem 1.6rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .minimal .btn--primary { background: var(--ink); color: #ffffff; }
+  .minimal .btn--primary:hover { background: var(--accent); border-color: var(--accent); }
+  .minimal .btn--text {
+    border-color: transparent;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    color: var(--muted);
+  }
+  .minimal .btn--text:hover { color: var(--ink); }
+  .minimal .footer .btn--primary:focus-visible { outline-color: var(--ink); }
+</style>

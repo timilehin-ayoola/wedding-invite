@@ -1,0 +1,168 @@
+---
+/* Design selection page — kept for reference only. It is NOT built or
+   published (this folder sits outside src/pages). To look at the two unused
+   directions again, copy the file you want into src/pages/ and visit it:
+      cp src/design-alternates/floral.astro  src/pages/floral.astro   → /floral/
+      cp src/design-alternates/minimal.astro src/pages/minimal.astro  → /minimal/
+      cp src/design-alternates/chooser.astro src/pages/chooser.astro  → /chooser/
+   Delete the copies when you are done — they should not ship to guests. */
+import Head from "../components/Head.astro";
+import { wedding } from "../data/wedding";
+import "../styles/base.css";
+
+const directions = [
+  {
+    href: "/",
+    name: "Classic Elegant",
+    blurb: "Ivory paper, thin gold rules, serif type. Formal, traditional, timeless.",
+    fonts: "Playfair Display + Lora",
+    colors: ["#FBF8F3", "#1E3A31", "#B08D57"],
+  },
+  {
+    href: "/minimal/",
+    name: "Modern Minimal",
+    blurb: "White space, hairline rules, big numerals. Clean, editorial, contemporary.",
+    fonts: "Inter",
+    colors: ["#FFFFFF", "#0E0E0E", "#E2542C"],
+  },
+  {
+    href: "/floral/",
+    name: "Romantic Floral",
+    blurb: "Cream and blush, sage green, script headings. Warm, soft, romantic.",
+    fonts: "Great Vibes + Cormorant Garamond",
+    colors: ["#FFFBF7", "#7C8B6F", "#C98A79"],
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head
+      title="Choose a direction — wedding invitation"
+      description="Three design directions for the wedding invitation."
+      noindex={true}
+      themeColor="#111111"
+      fonts="family=Inter:wght@400;600;700"
+    />
+  </head>
+
+  <body class="chooser">
+    <a class="skip-link" href="#main">Skip to the directions</a>
+    <main id="main" class="wrap">
+      <header class="head">
+        <p class="head__kicker">Design selection · step 1</p>
+        <h1 class="head__title">Pick a direction</h1>
+        <p class="head__intro">
+          Three finished invitations built from the same placeholder content. Open each one, look at
+          it on a phone and a desktop, and pick the one you like best. Nothing here is final — the
+          content stays editable either way.
+        </p>
+      </header>
+
+      <ul class="grid">
+        {directions.map((direction, index) => (
+          <li class="card">
+            <a class="card__link" href={direction.href}>
+              <span class="card__no">0{index + 1}</span>
+              <span class="card__name">{direction.name}</span>
+              <span class="card__blurb">{direction.blurb}</span>
+              <span class="card__swatches" aria-hidden="true">
+                {direction.colors.map((color) => (
+                  <span class="card__swatch" style={`background:${color}`}></span>
+                ))}
+              </span>
+              <span class="card__fonts">Type: {direction.fonts}</span>
+              <span class="card__cta">Open preview <span aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <footer class="foot">
+        <p>
+          Content is placeholder text for {wedding.couple.partnerOne} &amp; {wedding.couple.partnerTwo} —
+          names, date, venue, story, photos and the gift link all live in one file.
+        </p>
+        <p class="foot__small">
+          This selection page is removed once a direction is chosen.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  .chooser {
+    --ink: #f4f1ea;
+    background: #111111;
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .chooser :focus-visible { outline-color: #f4f1ea; }
+
+  .chooser .wrap {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
+  }
+  .chooser .head__kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #8f8a82;
+  }
+  .chooser .head__title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-top: 0.75rem;
+  }
+  .chooser .head__intro { margin-top: 1rem; max-width: 46rem; color: #b6b1a8; }
+
+  .chooser .grid {
+    margin-top: clamp(2rem, 6vw, 3.5rem);
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  }
+  .chooser .card__link {
+    display: grid;
+    gap: 0.65rem;
+    height: 100%;
+    padding: 1.75rem;
+    background: #1b1b1b;
+    border: 1px solid #2b2b2b;
+    border-radius: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .chooser .card__link:hover { border-color: #6d675e; transform: translateY(-3px); }
+  .chooser .card__no { font-size: 0.75rem; letter-spacing: 0.16em; color: #8f8a82; }
+  .chooser .card__name { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+  .chooser .card__blurb { color: #b6b1a8; font-size: 0.95rem; }
+  .chooser .card__swatches { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+  .chooser .card__swatch {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .chooser .card__fonts { font-size: 0.82rem; color: #8f8a82; }
+  .chooser .card__cta { margin-top: 0.75rem; font-weight: 600; color: #f4f1ea; }
+
+  .chooser .foot {
+    margin-top: clamp(2.5rem, 7vw, 4rem);
+    border-top: 1px solid #2b2b2b;
+    padding-top: 1.5rem;
+    color: #8f8a82;
+    font-size: 0.9rem;
+    max-width: 46rem;
+  }
+  .chooser .foot__small { margin-top: 0.5rem; font-size: 0.8rem; color: #8f8a82; }
+</style>

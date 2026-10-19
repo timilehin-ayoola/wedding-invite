@@ -1,0 +1,55 @@
+---
+// Live countdown. Renders a static, correct fallback without JavaScript and
+// under prefers-reduced-motion; the script in Behaviours.astro ticks it.
+import { wedding } from "../data/wedding";
+
+export interface Props {
+  /** Optional extra class for per-design styling. */
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+const { iso, long, countdownLabel, countdownPastLabel } = wedding.date;
+
+// Server-rendered static fallback: days remaining as of build time, so the
+// page is meaningful even with JavaScript disabled.
+const now = new Date();
+const target = new Date(iso);
+const daysRemaining = Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 86_400_000));
+const isPast = target.getTime() <= now.getTime();
+---
+
+<div
+  class={`countdown ${className}`.trim()}
+  data-countdown
+  data-date={iso}
+  data-date-display={long}
+  data-past-label={countdownPastLabel}
+>
+  <ol class="countdown__grid" aria-hidden="true">
+    <li class="countdown__unit">
+      <span class="countdown__value" data-unit="days">{daysRemaining}</span>
+      <span class="countdown__name">days</span>
+    </li>
+    <li class="countdown__unit">
+      <span class="countdown__value" data-unit="hours">00</span>
+      <span class="countdown__name">hours</span>
+    </li>
+    <li class="countdown__unit">
+      <span class="countdown__value" data-unit="minutes">00</span>
+      <span class="countdown__name">minutes</span>
+    </li>
+    <li class="countdown__unit">
+      <span class="countdown__value" data-unit="seconds">00</span>
+      <span class="countdown__name">seconds</span>
+    </li>
+  </ol>
+
+  <p class="countdown__label" data-countdown-label>
+    {isPast ? countdownPastLabel : countdownLabel}
+  </p>
+
+  <p class="sr-only" role="status" data-countdown-status>
+    {`${long}${isPast ? " has passed." : ` is in ${daysRemaining} days.`}`}
+  </p>
+</div>

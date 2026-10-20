@@ -199,23 +199,7 @@ const isExternal = /^https?:\/\//.test(gift.url);
           </div>
         </section>
 
-        <!-- --------------------------------------------------------- replies -->
-        <section class="slide" data-slide="7" aria-labelledby="replies-heading">
-          <div class="section">
-            <p class="eyebrow eyebrow--muted">Kindly reply</p>
-            <h2 class="section__title" id="replies-heading">{replies.heading}</h2>
-            <p class="lede">{replies.text}</p>
-            <ul class="replies">
-              {replies.contacts.map((contact) => (
-                <li class="replies__item">
-                  <span class="replies__name">{contact.name}</span>
-                  <span class="replies__channel">{contact.channel}</span>
-                  <span class="replies__value">{contact.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <!-- RSVP section removed as requested -->
 
         <div class="slider-nav" aria-label="Invitation navigation">
           <ul class="slider-dots" aria-live="polite">

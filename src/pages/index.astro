@@ -37,6 +37,18 @@ const isExternal = /^https?:\/\//.test(gift.url);
       <div class="slider" id="invitation-slider" aria-live="polite">
         <!-- ------------------------------------------------------------ hero -->
         <section class="slide is-active" data-slide="0" aria-label="Invitation cover">
+          <!-- Envelope modal start -->
+          <div class="envelope-wrapper" aria-live="polite">
+            <div class="envelope" role="button" tabindex="0" aria-label="Open invitation" title="tap to reveal"> 
+              <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="120" height="80" rx="8" fill="white" stroke="black" stroke-width="2"/>
+                <path d="M0 20 L60 45 L120 20" stroke="black" stroke-width="2"/>
+              </svg>
+            </div>
+            <p class="envelope-instruction">Tap the envelope to start</p>
+          </div>
+          <!-- Envelope modal end -->
+
           <header class="hero">
             <div class="hero__frame">
               <p class="monogram" aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}>
@@ -202,11 +214,11 @@ const isExternal = /^https?:\/\//.test(gift.url);
         <!-- RSVP section removed as requested -->
 
         <div class="slider-nav" aria-label="Invitation navigation">
-          <ul class="slider-dots" aria-live="polite">
-            {Array.from({length: 8}).map((_, i) => (
-              <li class={{"dot": true, "active": i === 0}} aria-label={`Slide ${i + 1}`} key={i} />
-            ))}
-          </ul>
+          <div class="slider-dots" aria-live="polite">
+        {Array.from({length: 8}).map((_, i) => (
+          <li class={{"dot": true, "active": i === 0}} aria-label={`Slide ${i + 1}`} key={i} />
+        ))}
+      </div>
         </div>
       </div>
     </main>

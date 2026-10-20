@@ -217,11 +217,13 @@ const isExternal = /^https?:\/\//.test(gift.url);
           </div>
         </section>
 
-        <nav class="slider-nav" aria-label="Invitation navigation">
-          <button class="slider-btn" type="button" data-prev aria-label="Previous slide">← Back</button>
-          <span class="slider-counter" aria-live="polite"><span data-slide-current>1</span> / <span data-slide-total>8</span></span>
-          <button class="slider-btn slider-btn--next" type="button" data-next aria-label="Next slide">Next →</button>
-        </nav>
+        <div class="slider-nav" aria-label="Invitation navigation">
+          <ul class="slider-dots" aria-live="polite">
+            {Array.from({length: slides.length}).map((_, i) => (
+              <li class={{"dot": true, "active": i === 0}} aria-label={`Slide ${i + 1}`} key={i} />
+            ))}
+          </ul>
+        </div>
       </div>
     </main>
 

@@ -15,11 +15,6 @@ import "../styles/base.css";
 const { couple, date, venue, hero, story, schedule, gallery, gift, faq, replies, footer, meta } =
   wedding;
 
-const shareUrl = new URL(
-  base === "" || Astro.url.pathname.startsWith(`${base}/`) ? Astro.url.pathname : `${base}${Astro.url.pathname}`,
-  Astro.site ?? Astro.url.origin,
-).href;
-const whatsappShare = `https://wa.me/?text=${encodeURIComponent(`${footer.shareText} — ${shareUrl}`)}`;
 const isExternal = /^https?:\/\//.test(gift.url);
 ---
 
@@ -39,174 +34,195 @@ const isExternal = /^https?:\/\//.test(gift.url);
     <a class="skip-link" href="#main">Skip to the invitation</a>
 
     <main id="main">
-      <!-- ------------------------------------------------------------ hero -->
-      <header class="hero" data-reveal>
-        <div class="hero__frame">
-          <p class="monogram" aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}>
-            {couple.monogram}
-          </p>
-          <p class="eyebrow">{hero.kicker}</p>
-          <p class="guest-greeting" id="guest-greeting" aria-live="polite"></p>
-          <h1 class="names">
-            <span>{couple.partnerOne}</span>
-            <span class="names__amp" aria-hidden="true">&amp;</span>
-            <span>{couple.partnerTwo}</span>
-          </h1>
-          <div class="rule" aria-hidden="true">
-            <span class="rule__line"></span>
-            <span class="rule__dot"></span>
-            <span class="rule__line"></span>
-          </div>
-          <p class="hero__date">
-            <time datetime={date.iso}>{date.long}</time>
-          </p>
-          <p class="hero__venue">{venue.name} · {venue.addressLines.slice(-2).join(", ")}</p>
-          <p class="hero__tagline">{hero.tagline}</p>
-
-          <Countdown class="countdown--classic" />
-
-          <div class="hero__actions">
-            <a class="btn btn--solid" href={withBase("/wedding.ics")} download>Add to calendar</a>
-            <a class="btn btn--ghost" href={whatsappShare} target="_blank" rel="noopener noreferrer">
-              Share this invite
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <!-- ----------------------------------------------------------- story -->
-      <section class="section" aria-labelledby="story-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Chapter one</p>
-        <h2 class="section__title" id="story-heading">{story.heading}</h2>
-        <p class="lede">{story.intro}</p>
-        {story.paragraphs.map((paragraph) => <p class="body-text">{paragraph}</p>)}
-
-        <ol class="milestones">
-          {story.milestones.map((milestone) => (
-            <li class="milestone">
-              <span class="milestone__year">{milestone.year}</span>
-              <div>
-                <h3 class="milestone__title">{milestone.title}</h3>
-                <p class="milestone__text">{milestone.text}</p>
+      <div class="slider" id="invitation-slider" aria-live="polite">
+        <!-- ------------------------------------------------------------ hero -->
+        <section class="slide is-active" data-slide="0" aria-label="Invitation cover">
+          <header class="hero">
+            <div class="hero__frame">
+              <p class="monogram" aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}>
+                {couple.monogram}
+              </p>
+              <p class="eyebrow">{hero.kicker}</p>
+              <p class="guest-greeting" id="guest-greeting" aria-live="polite"></p>
+              <h1 class="names">
+                <span>{couple.partnerOne}</span>
+                <span class="names__amp" aria-hidden="true">&amp;</span>
+                <span>{couple.partnerTwo}</span>
+              </h1>
+              <div class="rule" aria-hidden="true">
+                <span class="rule__line"></span>
+                <span class="rule__dot"></span>
+                <span class="rule__line"></span>
               </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+              <p class="hero__date">
+                <time datetime={date.iso}>{date.long}</time>
+              </p>
+              <p class="hero__venue">{venue.name} · {venue.addressLines.slice(-2).join(", ")}</p>
+              <p class="hero__tagline">{hero.tagline}</p>
 
-      <!-- --------------------------------------------------------- the day -->
-      <section class="section" aria-labelledby="day-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Order of the day</p>
-        <h2 class="section__title" id="day-heading">The celebration</h2>
-        <p class="lede">
-          {date.long}, from {date.ceremonyTime}. Ceremony at {date.ceremonyTime}, dinner at{" "}
-          {date.receptionTime}. All times are {date.timezoneLabel}.
-        </p>
-        <ol class="schedule">
-          {schedule.map((item) => (
-            <li class="schedule__item">
-              <span class="schedule__time">{item.time}</span>
-              <div>
-                <h3 class="schedule__title">{item.title}</h3>
-                <p class="schedule__detail">{item.detail}</p>
+              <Countdown class="countdown--classic" />
+
+              <div class="hero__actions">
+                <a class="btn btn--solid" href={withBase("/wedding.ics")} download>Add to calendar</a>
               </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+            </div>
+          </header>
+        </section>
 
-      <!-- ----------------------------------------------------------- venue -->
-      <section class="section" aria-labelledby="venue-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Where to find us</p>
-        <h2 class="section__title" id="venue-heading">The venue</h2>
-        <div class="venue panel">
-          <h3 class="venue__name">{venue.name}</h3>
-          <address class="venue__address">
-            {venue.addressLines.map((line) => <span>{line}</span>)}
-          </address>
-          <p class="body-text">{venue.directions}</p>
-          <a class="btn btn--solid" href={venue.mapUrl} target="_blank" rel="noopener noreferrer">
-            {venue.mapLabel}
-          </a>
-        </div>
-      </section>
+        <!-- ----------------------------------------------------------- story -->
+        <section class="slide" data-slide="1" aria-labelledby="story-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Our story</p>
+            <h2 class="section__title" id="story-heading">{story.heading}</h2>
+            <p class="lede">{story.intro}</p>
+            {story.paragraphs.map((paragraph) => <p class="body-text">{paragraph}</p>)}
 
-      <!-- --------------------------------------------------------- gallery -->
-      <section class="section" aria-labelledby="gallery-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Moments</p>
-        <h2 class="section__title" id="gallery-heading">{gallery.heading}</h2>
-        <p class="lede">{gallery.intro}</p>
-        <ul class="gallery">
-          {gallery.photos.map((photo) => (
-            <li class:list={["gallery__item", `gallery__item--${photo.shape ?? "wide"}`]}>
-              <figure>
-                <img src={withBase(photo.src)} alt={photo.alt} loading="lazy" decoding="async" />
-                {photo.caption && <figcaption>{photo.caption}</figcaption>}
-              </figure>
-            </li>
-          ))}
-        </ul>
-      </section>
+            <ol class="milestones">
+              {story.milestones.map((milestone) => (
+                <li class="milestone">
+                  <span class="milestone__year">{milestone.year}</span>
+                  <div>
+                    <h3 class="milestone__title">{milestone.title}</h3>
+                    <p class="milestone__text">{milestone.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
-      <!-- ------------------------------------------------------------ gift -->
-      <section class="section section--gift" aria-labelledby="gift-heading" data-reveal>
-        <div class="gift panel panel--double">
-          <p class="eyebrow">A gentle note</p>
-          <h2 class="section__title" id="gift-heading">{gift.heading}</h2>
-          <p class="lede">{gift.message}</p>
-          <p class="gift__note">{gift.note}</p>
-          <a
-            class="btn btn--gold"
-            href={gift.url}
-            data-gift-link
-            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          >
-            {gift.ctaLabel}
-            {isExternal && <span class="sr-only"> ({gift.urlLabel})</span>}
-          </a>
-          <ul class="gift__alternatives">
-            {gift.alternatives.map((option) => (
-              <li>
-                <strong>{option.label}</strong>
-                <span>{option.detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+        <!-- --------------------------------------------------------- the day -->
+        <section class="slide" data-slide="2" aria-labelledby="day-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Order of the day</p>
+            <h2 class="section__title" id="day-heading">The celebration</h2>
+            <p class="lede">
+              {date.long}, from {date.ceremonyTime}. Ceremony at {date.ceremonyTime}, dinner at{" "}
+              {date.receptionTime}. All times are {date.timezoneLabel}.
+            </p>
+            <ol class="schedule">
+              {schedule.map((item) => (
+                <li class="schedule__item">
+                  <span class="schedule__time">{item.time}</span>
+                  <div>
+                    <h3 class="schedule__title">{item.title}</h3>
+                    <p class="schedule__detail">{item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
-      <!-- ------------------------------------------------------------- faq -->
-      <section class="section" aria-labelledby="faq-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Before you come</p>
-        <h2 class="section__title" id="faq-heading">{faq.heading}</h2>
-        <div class="faq">
-          {faq.items.map((item) => (
-            <details class="faq__item">
-              <summary>
-                <span>{item.q}</span>
-                <span class="faq__marker" aria-hidden="true"></span>
-              </summary>
-              <p class="body-text">{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+        <!-- ----------------------------------------------------------- venue -->
+        <section class="slide" data-slide="3" aria-labelledby="venue-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Where to find us</p>
+            <h2 class="section__title" id="venue-heading">The venue</h2>
+            <div class="venue panel">
+              <h3 class="venue__name">{venue.name}</h3>
+              <address class="venue__address">
+                {venue.addressLines.map((line) => <span>{line}</span>)}
+              </address>
+              <p class="body-text">{venue.directions}</p>
+              <a class="btn btn--solid" href={venue.mapUrl} target="_blank" rel="noopener noreferrer">
+                {venue.mapLabel}
+              </a>
+            </div>
+          </div>
+        </section>
 
-      <!-- --------------------------------------------------------- replies -->
-      <section class="section" aria-labelledby="replies-heading" data-reveal>
-        <p class="eyebrow eyebrow--muted">Kindly reply</p>
-        <h2 class="section__title" id="replies-heading">{replies.heading}</h2>
-        <p class="lede">{replies.text}</p>
-        <ul class="replies">
-          {replies.contacts.map((contact) => (
-            <li class="replies__item">
-              <span class="replies__name">{contact.name}</span>
-              <span class="replies__channel">{contact.channel}</span>
-              <span class="replies__value">{contact.value}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+        <!-- --------------------------------------------------------- gallery -->
+        <section class="slide" data-slide="4" aria-labelledby="gallery-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Moments</p>
+            <h2 class="section__title" id="gallery-heading">{gallery.heading}</h2>
+            <p class="lede">{gallery.intro}</p>
+            <ul class="gallery">
+              {gallery.photos.map((photo) => (
+                <li class:list={["gallery__item", `gallery__item--${photo.shape ?? "wide"}`]}>
+                  <figure>
+                    <img src={withBase(photo.src)} alt={photo.alt} loading="lazy" decoding="async" />
+                    {photo.caption && <figcaption>{photo.caption}</figcaption>}
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------ gift -->
+        <section class="slide" data-slide="5" aria-labelledby="gift-heading">
+          <div class="section section--gift">
+            <div class="gift panel panel--double">
+              <p class="eyebrow">A gentle note</p>
+              <h2 class="section__title" id="gift-heading">{gift.heading}</h2>
+              <p class="lede">{gift.message}</p>
+              <p class="gift__note">{gift.note}</p>
+              <a
+                class="btn btn--gold"
+                href={gift.url}
+                data-gift-link
+                {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {gift.ctaLabel}
+                {isExternal && <span class="sr-only"> ({gift.urlLabel})</span>}
+              </a>
+              <ul class="gift__alternatives">
+                {gift.alternatives.map((option) => (
+                  <li>
+                    <strong>{option.label}</strong>
+                    <span>{option.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------- faq -->
+        <section class="slide" data-slide="6" aria-labelledby="faq-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Before you come</p>
+            <h2 class="section__title" id="faq-heading">{faq.heading}</h2>
+            <div class="faq">
+              {faq.items.map((item) => (
+                <details class="faq__item">
+                  <summary>
+                    <span>{item.q}</span>
+                    <span class="faq__marker" aria-hidden="true"></span>
+                  </summary>
+                  <p class="body-text">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------- replies -->
+        <section class="slide" data-slide="7" aria-labelledby="replies-heading">
+          <div class="section">
+            <p class="eyebrow eyebrow--muted">Kindly reply</p>
+            <h2 class="section__title" id="replies-heading">{replies.heading}</h2>
+            <p class="lede">{replies.text}</p>
+            <ul class="replies">
+              {replies.contacts.map((contact) => (
+                <li class="replies__item">
+                  <span class="replies__name">{contact.name}</span>
+                  <span class="replies__channel">{contact.channel}</span>
+                  <span class="replies__value">{contact.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <nav class="slider-nav" aria-label="Invitation navigation">
+          <button class="slider-btn" type="button" data-prev aria-label="Previous slide">← Back</button>
+          <span class="slider-counter" aria-live="polite"><span data-slide-current>1</span> / <span data-slide-total>8</span></span>
+          <button class="slider-btn slider-btn--next" type="button" data-next aria-label="Next slide">Next →</button>
+        </nav>
+      </div>
     </main>
 
     <footer class="footer" data-reveal>
@@ -214,12 +230,6 @@ const isExternal = /^https?:\/\//.test(gift.url);
       <p class="footer__signature">{footer.signature}</p>
       <p class="footer__hashtag">{couple.hashtag}</p>
       <div class="footer__actions">
-        <a class="btn btn--ghost" href={whatsappShare} target="_blank" rel="noopener noreferrer">
-          Share on WhatsApp
-        </a>
-        <button class="btn btn--ghost" type="button" data-share data-share-text={footer.shareText}>
-          Copy invite link
-        </button>
       </div>
       <p class="footer__small">
         This invitation is for family and friends. Gift giving is entirely optional.
@@ -232,17 +242,49 @@ const isExternal = /^https?:\/\//.test(gift.url);
         try {
           var params = new URLSearchParams(window.location.search);
           var raw = params.get("guest") || params.get("name") || params.get("to");
-          if (!raw) return;
-          var name = raw.replace(/\+/g, " ").trim();
-          if (!name) return;
-          // Basic sanitization - keep letters, spaces, hyphens, apostrophes, periods
-          name = name.replace(/[^A-Za-z\s'\.\-]/g, " ").replace(/\s+/g, " ").trim();
-          if (!name) return;
-          var el = document.getElementById("guest-greeting");
-          if (el) {
-            el.textContent = "Hello, " + name + ",";
-            el.classList.add("is-visible");
+          if (raw) {
+            var name = raw.replace(/\+/g, " ").trim();
+            if (name) {
+              name = name.replace(/[^A-Za-z\s'\.\-]/g, " ").replace(/\s+/g, " ").trim();
+              if (name) {
+                var el = document.getElementById("guest-greeting");
+                if (el) {
+                  el.textContent = "Hello, " + name + ",";
+                  el.classList.add("is-visible");
+                }
+              }
+            }
           }
+
+          var slides = Array.from(document.querySelectorAll('.slide'));
+          var prev = document.querySelector('[data-prev]');
+          var next = document.querySelector('[data-next]');
+          var current = document.querySelector('[data-slide-current]');
+          var total = document.querySelector('[data-slide-total]');
+          var idx = 0;
+          if (total) total.textContent = String(slides.length);
+          function show(i: number) {
+            idx = Math.max(0, Math.min(i, slides.length - 1));
+            slides.forEach((s: Element, k: number) => s.classList.toggle('is-active', k === idx));
+            if (current) (current as HTMLElement).textContent = String(idx + 1);
+            if (prev) (prev as HTMLButtonElement).disabled = idx === 0;
+            if (next) (next as HTMLButtonElement).disabled = idx === slides.length - 1;
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }
+          show(0);
+          if (prev) prev.addEventListener('click', () => show(idx - 1));
+          if (next) next.addEventListener('click', () => show(idx + 1));
+          document.addEventListener('keydown', function (e: KeyboardEvent) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
+          });
+          let startX = 0, endX = 0;
+          document.addEventListener('touchstart', (e: TouchEvent) => startX = e.changedTouches[0].screenX, {passive:true});
+          document.addEventListener('touchend', (e: TouchEvent) => {
+            endX = e.changedTouches[0].screenX;
+            if (endX - startX > 40) show(idx - 1);
+            if (startX - endX > 40) show(idx + 1);
+          }, {passive:true});
         } catch (e) {}
       })();
     </script>
@@ -380,6 +422,61 @@ const isExternal = /^https?:\/\//.test(gift.url);
     font-style: italic;
     font-size: 1.08rem;
     color: #3d4547;
+  }
+
+  /* Slider */
+  .classic .slider {
+    min-height: 100svh;
+  }
+  .classic .slide {
+    display: none;
+    min-height: 100svh;
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+  .classic .slide.is-active {
+    display: block;
+  }
+  .classic .slide .section {
+    margin: clamp(2rem, 8vw, 6rem) auto;
+  }
+  .classic .slide .hero {
+    padding: 0;
+    min-height: calc(100svh - 6rem);
+  }
+  .classic .slider-nav {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(251, 248, 243, 0.92);
+    border: 1px solid var(--rule);
+    padding: 0.5rem 1rem;
+    backdrop-filter: blur(6px);
+    z-index: 10;
+    box-shadow: 0 10px 30px -20px rgba(35, 41, 43, 0.5);
+  }
+  .classic .slider-btn {
+    font-family: "Lora", serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    color: var(--green);
+    cursor: pointer;
+  }
+  .classic .slider-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .classic .slider-counter {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .classic .hero__actions {

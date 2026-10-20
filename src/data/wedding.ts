@@ -19,7 +19,7 @@ export const wedding = {
   meta: {
     title: "Timilehin & Fathia — Court Wedding Invitation",
     description:
-      "Timilehin and Fathia are having their court wedding in November 2026 in Lagos. You are specially invited.",
+      "Timilehin and Fathia are having their court wedding on Saturday, 15 November 2026 in Lagos. You are specially invited.",
     // Kept out of search engines so only people you send the link to can find
     // it. The page itself is public to anyone who has the link.
     noindex: true,
@@ -39,10 +39,10 @@ export const wedding = {
   date: {
     // Machine-readable date & time, with the timezone offset (+01:00 = Lagos).
     // This drives the live countdown AND the "add to calendar" file.
-    iso: "2026-11-01T15:00:00+01:00",
+    iso: "2026-11-15T15:00:00+01:00",
     // How the date reads to guests.
-    long: "November 2026 (date to be confirmed)",
-    short: "November 2026",
+    long: "Saturday, 15 November 2026",
+    short: "15 · 11 · 2026",
     // Shown next to the countdown when the big day is still ahead.
     countdownLabel: "until we say “I do”",
     // Shown once the date has passed.
@@ -77,14 +77,14 @@ export const wedding = {
     heading: "Our story",
     intro: "Every love story is beautiful. This is ours, told briefly.",
     paragraphs: [
-      "We met on a rainy afternoon in 2019, arguing about the last seat in a bus. He gave it up. She never forgot it.",
-      "Seven years, three cities and countless plates of jollof rice later, we are finally getting married — and we cannot imagine celebrating without the people who have carried us this far.",
+      "We've been in the same environment since 2022, but we only started actually talking on 22 March 2025.",
+      "We officially started dating on 6 May 2025. Now we're getting married by court on 15 November 2026 — and we can't wait to celebrate with you.",
     ],
     milestones: [
-      { year: "2019", title: "We met", text: "A bus stop, one empty seat, and a shared umbrella." },
-      { year: "2021", title: "Our first home", text: "A tiny flat, one plant, and a lot of hope." },
-      { year: "2024", title: "The proposal", text: "Asked, and answered, before the sun came up." },
-      { year: "2026", title: "The wedding", text: "And now, the beginning of the rest of it." },
+      { year: "2022", title: "Same space", text: "We were in the same environment, paths hadn't crossed in conversation yet." },
+      { year: "22 Mar 2025", title: "First conversation", text: "We started talking on 22 March 2025." },
+      { year: "6 May 2025", title: "We started dating", text: "We officially began dating on 6 May 2025." },
+      { year: "15 Nov 2026", title: "Court wedding", text: "Our court wedding — the beginning of forever." },
     ],
   },
 
@@ -148,7 +148,7 @@ export const wedding = {
   // There is no RSVP form on this site. Guests reply to you directly.
   replies: {
     heading: "Let us know you're coming",
-    text: "Kindly reply by 30 May 2026 so we can plan your seat — a message is all it takes.",
+    text: "Kindly reply so we can plan — a message is all it takes.",
     contacts: [
       { name: "Timilehin", channel: "WhatsApp", value: "+234 000 000 0000" },
       { name: "Fathia", channel: "WhatsApp", value: "+234 000 000 0000" },
@@ -160,7 +160,7 @@ export const wedding = {
     closing: "We cannot wait to celebrate with you.",
     signature: "With all our love, Timilehin & Fathia",
     // Used by the "share this invite" button.
-    shareText: "You're invited to Timilehin & Fathia's court wedding — November 2026 (date to be confirmed)",
+    shareText: "You're invited to Timilehin & Fathia's court wedding — Saturday, 15 November 2026",
   },
 };
 

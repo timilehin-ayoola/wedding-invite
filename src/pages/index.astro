@@ -219,7 +219,7 @@ const isExternal = /^https?:\/\//.test(gift.url);
 
         <div class="slider-nav" aria-label="Invitation navigation">
           <ul class="slider-dots" aria-live="polite">
-            {Array.from({length: slides.length}).map((_, i) => (
+            {Array.from({length: 8}).map((_, i) => (
               <li class={{"dot": true, "active": i === 0}} aria-label={`Slide ${i + 1}`} key={i} />
             ))}
           </ul>

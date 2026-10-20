@@ -127,8 +127,9 @@ export const wedding = {
     url: "https://example.com/our-gift-page",
     urlLabel: "opens in a new tab",
     alternatives: [
-      { label: "Bank transfer", detail: "Account details available on request — just message us." },
-      { label: "In person", detail: "There will be a wishing well at the reception." },
+      { label: "Account Name", detail: "Your Account Name" },
+      { label: "Bank", detail: "Your Bank Name" },
+      { label: "Account Number", detail: "Your Account Number" },
     ],
   },
 

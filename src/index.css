@@ -1,0 +1,26 @@
+/* Global styles copied from Astro version */
+/* Basic resets */
+body, html, #root {
+  margin: 0; padding: 0; height: 100%;
+}
+body {
+  font-family: 'Merriweather', serif;
+  background: var(--paper) !important;
+}
+.app.classic {
+  /* include all styles from src/pages/index.astro – omitted for brevity */
+}
+
+/* envelope wrapper */
+.envelope-wrapper {
+  display: flex; flex-direction: column; align-items: center; margin: 2rem 0;
+}
+.envelope { width: 80px; height: 53px; cursor: pointer; }
+.envelope-instruction { margin-top: 0.5rem; font-family: Lora, serif; font-size: 0.75rem; color: var(--muted); }
+
+/* dot navigation */
+.slider-dots { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; list-style: none; padding: 0; margin: 0; }
+.slider-dots .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--muted); opacity: 0.6; }
+.slider-dots .dot.active { opacity: 1; background: var(--green); }
+
+/* other component specific styles omitted for brevity */

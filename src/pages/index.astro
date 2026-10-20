@@ -46,6 +46,7 @@ const isExternal = /^https?:\/\//.test(gift.url);
             {couple.monogram}
           </p>
           <p class="eyebrow">{hero.kicker}</p>
+          <p class="guest-greeting" id="guest-greeting" aria-live="polite"></p>
           <h1 class="names">
             <span>{couple.partnerOne}</span>
             <span class="names__amp" aria-hidden="true">&amp;</span>
@@ -226,6 +227,25 @@ const isExternal = /^https?:\/\//.test(gift.url);
     </footer>
 
     <Behaviours />
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var raw = params.get("guest") || params.get("name") || params.get("to");
+          if (!raw) return;
+          var name = raw.replace(/\+/g, " ").trim();
+          if (!name) return;
+          // Basic sanitization - keep letters, spaces, hyphens, apostrophes, periods
+          name = name.replace(/[^A-Za-z\s'\.\-]/g, " ").replace(/\s+/g, " ").trim();
+          if (!name) return;
+          var el = document.getElementById("guest-greeting");
+          if (el) {
+            el.textContent = "Hello, " + name + ",";
+            el.classList.add("is-visible");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </body>
 </html>
 
@@ -343,6 +363,18 @@ const isExternal = /^https?:\/\//.test(gift.url);
     text-transform: uppercase;
     color: var(--muted);
   }
+  .classic .guest-greeting {
+    display: none;
+    margin: 0 auto 0.8rem;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--green);
+    letter-spacing: 0.02em;
+  }
+  .classic .guest-greeting.is-visible {
+    display: block;
+  }
+
   .classic .hero__tagline {
     margin-top: 1.6rem;
     font-style: italic;

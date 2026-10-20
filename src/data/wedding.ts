@@ -17,9 +17,9 @@ export const wedding = {
   // Used for the browser tab and the preview card that appears when the link
   // is shared in WhatsApp, Instagram, iMessage, etc.
   meta: {
-    title: "Amara & Tunde — Wedding Invitation",
+    title: "Timilehin & Fathia — Court Wedding Invitation",
     description:
-      "Amara and Tunde are getting married on Saturday, 12 June 2027 in Lagos. Join us to celebrate.",
+      "Timilehin and Fathia are having their court wedding in November 2026 in Lagos. You are specially invited.",
     // Kept out of search engines so only people you send the link to can find
     // it. The page itself is public to anyone who has the link.
     noindex: true,
@@ -27,22 +27,22 @@ export const wedding = {
 
   /* ------------------------------------------------------------- the couple */
   couple: {
-    partnerOne: "Amara",
-    partnerTwo: "Tunde",
+    partnerOne: "Timilehin",
+    partnerTwo: "Fathia",
     // Two letters, used as the little monogram / logo.
     monogram: "A&T",
     // Optional: a hashtag guests can use when posting photos.
-    hashtag: "#AmaraAndTunde2027",
+    hashtag: "#TimilehinAndFathia2026",
   },
 
   /* ------------------------------------------------------------------ date */
   date: {
     // Machine-readable date & time, with the timezone offset (+01:00 = Lagos).
     // This drives the live countdown AND the "add to calendar" file.
-    iso: "2027-06-12T15:00:00+01:00",
+    iso: "2026-11-01T15:00:00+01:00",
     // How the date reads to guests.
-    long: "Saturday, 12 June 2027",
-    short: "12 · 06 · 2027",
+    long: "November 2026 (date to be confirmed)",
+    short: "November 2026",
     // Shown next to the countdown when the big day is still ahead.
     countdownLabel: "until we say “I do”",
     // Shown once the date has passed.
@@ -67,8 +67,9 @@ export const wedding = {
   hero: {
     kicker: "Together with our families",
     invitation: "You are warmly invited",
+    guestGreeting: "Hello,",
     // One heartfelt line. Keep it short — it sits under your names.
-    tagline: "Two families, one joyful day — and we would love you there.",
+    tagline: "Our court wedding — and we would love for you to celebrate with us.",
   },
 
   /* --------------------------------------------------------------- our story */
@@ -83,7 +84,7 @@ export const wedding = {
       { year: "2019", title: "We met", text: "A bus stop, one empty seat, and a shared umbrella." },
       { year: "2021", title: "Our first home", text: "A tiny flat, one plant, and a lot of hope." },
       { year: "2024", title: "The proposal", text: "Asked, and answered, before the sun came up." },
-      { year: "2027", title: "The wedding", text: "And now, the beginning of the rest of it." },
+      { year: "2026", title: "The wedding", text: "And now, the beginning of the rest of it." },
     ],
   },
 
@@ -147,19 +148,19 @@ export const wedding = {
   // There is no RSVP form on this site. Guests reply to you directly.
   replies: {
     heading: "Let us know you're coming",
-    text: "Kindly reply by 30 May 2027 so we can plan your seat — a message is all it takes.",
+    text: "Kindly reply by 30 May 2026 so we can plan your seat — a message is all it takes.",
     contacts: [
-      { name: "Amara", channel: "WhatsApp", value: "+234 000 000 0000" },
-      { name: "Tunde", channel: "WhatsApp", value: "+234 000 000 0000" },
+      { name: "Timilehin", channel: "WhatsApp", value: "+234 000 000 0000" },
+      { name: "Fathia", channel: "WhatsApp", value: "+234 000 000 0000" },
     ],
   },
 
   /* ---------------------------------------------------------------- footer */
   footer: {
     closing: "We cannot wait to celebrate with you.",
-    signature: "With all our love, Amara & Tunde",
+    signature: "With all our love, Timilehin & Fathia",
     // Used by the "share this invite" button.
-    shareText: "You're invited to Amara & Tunde's wedding — Saturday, 12 June 2027",
+    shareText: "You're invited to Timilehin & Fathia's court wedding — November 2026 (date to be confirmed)",
   },
 };
 

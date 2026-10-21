@@ -25,20 +25,15 @@ export default function App() {
       <section className="slide is-active" data-slide="0" aria-label="Invitation cover">
         <header className="hero">
           <div className="hero__frame">
-            <p className="monogram" aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}>{couple.monogram}</p>
-            <p className="eyebrow">{hero.kicker}</p>
-            <p className="guest-greeting" id="guest-greeting">{guestName ? `Hello, ${guestName},` : ''}</p>
-            <h1 className="names">
-              <span>{couple.partnerOne}</span>
-              <span className="names__amp" aria-hidden="true">&amp;</span>
-              <span>{couple.partnerTwo}</span>
-            </h1>
-            <div className="rule" aria-hidden="true"><span className="rule__line"/><span className="rule__dot"/><span className="rule__line"/></div>
-            <p className="hero__date"><time dateTime={date.iso}>{date.long}</time></p>
-            <p className="hero__venue">{`${venue.name} · ${venue.addressLines.slice(-2).join(', ')}`}</p>
-            <p className="hero__tagline">{hero.tagline}</p>
-            <Countdown iso={date.iso} />
-            <div className="hero__actions"><a className="btn btn--solid" href={withBase('/wedding.ics')} download>Add to calendar</a></div>
+            <div className="envelope-cover" role="button" tabIndex={0} onClick={() => {}} style={{backgroundImage: `url(/wedding-invite/evp.png)`}}>
+              <div className="envelope-content">
+                <p className="envelope-greeting">HALLO ✌</p>
+                {guestName && <div className="envelope-name">{guestName}</div>}
+                <p className="envelope-text">YOU'RE INVITED TO OUR WEDDING</p>
+                <h2 className="envelope-names">{couple.partnerOne} & {couple.partnerTwo}</h2>
+              </div>
+              <button className="envelope-open">OPEN INVITATION</button>
+            </div>
           </div>
         </header>
       </section>

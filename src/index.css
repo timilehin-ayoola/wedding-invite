@@ -23,4 +23,63 @@ body {
 .slider-dots .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--muted); opacity: 0.6; }
 .slider-dots .dot.active { opacity: 1; background: var(--green); }
 
-/* other component specific styles omitted for brevity */
+/* Envelope cover styles from salmanagustian */
+.envelope-cover {
+  background: transparent;
+  background-position: center;
+  background-repeat: unset;
+  background-size: cover;
+  border-radius: 16px;
+  height: 400px;
+  width: 342px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.envelope-content {
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.envelope-greeting {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.envelope-name {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.envelope-text {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.envelope-names {
+  font-family: 'Great Vibes', cursive, serif;
+  font-size: 1.8rem;
+  color: #D6BA8D;
+  margin: 0;
+}
+
+.envelope-open {
+  position: absolute;
+  bottom: 3rem;
+  background: white;
+  color: #666;
+  border: none;
+  padding: 0.5rem 2rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
